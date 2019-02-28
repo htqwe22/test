@@ -39,7 +39,7 @@ int ftp_recv(int fd,char *buff, int size,int timeout_ms)
 	if (ret >0){
 		ret = recv(fd, buff, size -1,0);
 		if (ret >0){
-			buff[ret-1] = '\0';
+			buff[ret] = '\0';
 		}
 	}else{
 		ebug("server unreachable\r\n");
@@ -255,12 +255,14 @@ int exec_download(struct ftp_client *client, int argc ,char **argv)
 	else
 		filename += 1;
 	debug("will download file %s\r\n",filename);
+#if 0
 	if (if_file_exist(filename)){
 		ebug("file exist\r\n");
 		close(fd1);
 		return -5;
 	}
-	pfile = fopen(filename, "w+");
+#endif
+	pfile = fopen(filename, "wb+");
 	if(pfile == NULL){
 		debug("open file %s failed\r\n",filename);
 		ebug("file exist\r\n");
@@ -272,7 +274,7 @@ int exec_download(struct ftp_client *client, int argc ,char **argv)
 	ftp_send(client->fd, buff,ret);
 	ret = ftp_recv(client->fd, buff,sizeof(buff), 2000);
 	if (ret <= 0 || atoi(buff) != 150){
-		ebug("CMD RETR error\r\n");
+		ebug("CMD RETR error %s\r\n", buff);
 		close(fd1);
 		fclose(pfile);
 		return -7;	
@@ -516,8 +518,8 @@ int main(int argc ,char **argv)
 	char server_msg[256];
 	char *server = "localhost";
 	char *port = "21";
-	char *user = "ubuntu";
-	char *passwd = "wskidtf";
+	char *user = "anonymous";
+	char *passwd = "www.kevin.com";
 	if (argc >1)
 		server = argv[1];
 	if (argc >2)

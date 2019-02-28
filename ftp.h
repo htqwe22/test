@@ -11,8 +11,8 @@ struct ftp_client
 	int fd;
 	char port[6];
 	char server[26];
-	char user[12];
-	char passwd[12];
+	char user[32];
+	char passwd[64];
 	int stat;
 };
 int connet_server(char *saddr,char *port);

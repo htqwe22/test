@@ -2,7 +2,7 @@
 SUBDIRS=$(shell ls -l | grep ^d | awk '{if($$9 != "obj") print $$9}')
 
 ROOT_DIR=$(shell pwd)
-BIN=main
+BIN=ftp
 OBJS_DIR=obj/tmp
 BIN_DIR=obj/bin
 
@@ -24,6 +24,7 @@ all: $(BIN)
 
 $(BIN):$(CUR_OBJS)
 	$(CC) $^ -o $@ -lpthread 
+	strip $@
 # -lrt
 
 $(CUR_OBJS):%.o:%.c
